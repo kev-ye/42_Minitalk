@@ -6,7 +6,7 @@
 /*   By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 21:15:42 by kaye              #+#    #+#             */
-/*   Updated: 2021/06/27 22:08:54 by kaye             ###   ########.fr       */
+/*   Updated: 2021/06/27 22:58:31 by kaye             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,9 @@ static void	send_char(unsigned int c, pid_t pid)
 	while(bit >= 0)
 	{
 		if (((c >> bit) % 2) == 1)
-		{
-			if (kill(pid, SIGUSR1) == -1)
-				exit_with_msg(B_RED"Kill failed !\n"NONE);
-		}
+			kill(pid, SIGUSR1);
 		else
-		{
-			if (kill(pid, SIGUSR2) == -1)
-				exit_with_msg(B_RED"Kill failed !\n"NONE);
-		}
+			kill(pid, SIGUSR2);
 		usleep(100);
 		--bit;
 	}

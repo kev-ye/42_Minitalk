@@ -6,7 +6,7 @@
 #    By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 13:39:40 by kaye              #+#    #+#              #
-#    Updated: 2021/06/27 22:14:58 by kaye             ###   ########.fr        #
+#    Updated: 2021/06/27 22:17:50 by kaye             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,9 +63,7 @@ $(SERVER): $(OBJ_SERVER) $(OBJ_CLIENT) $(OBJ_COMMON)
 	@$(CC) $(CFLAG) $(OBJ_CLIENT) $(IFLAGS) $(OBJ_COMMON) -o $(CLIENT)
 	@echo "$(GREEN_COLOR)Compilation $(YELLOW_COLOR)of $(RED_COLOR)$(CLIENT) $(BLUE_COLOR)done$(DEFAULT_COLOR)"
 
-all: $(SERVER)
-
-bonus: $(OBJ_SERVER_B) $(OBJ_CLIENT_B) $(OBJ_COMMON)
+$(SERVER_B): $(OBJ_SERVER_B) $(OBJ_CLIENT_B) $(OBJ_COMMON)
 	@echo "Creating $(RED_COLOR) $(SERVER_B) $(DEFAULT_COLOR)..."
 	@$(CC) $(CFLAG) $(OBJ_SERVER_B) $(IFLAGS) $(OBJ_COMMON) -o $(SERVER_B)
 	@echo "$(GREEN_COLOR)Compilation $(YELLOW_COLOR)of $(RED_COLOR)$(SERVER_B) $(BLUE_COLOR)done$(DEFAULT_COLOR)"
@@ -73,11 +71,17 @@ bonus: $(OBJ_SERVER_B) $(OBJ_CLIENT_B) $(OBJ_COMMON)
 	@$(CC) $(CFLAG) $(OBJ_CLIENT_B) $(IFLAGS) $(OBJ_COMMON) -o $(CLIENT_B)
 	@echo "$(GREEN_COLOR)Compilation $(YELLOW_COLOR)of $(RED_COLOR)$(CLIENT_B) $(BLUE_COLOR)done$(DEFAULT_COLOR)"
 
+all: $(SERVER)
+
+bonus: $(SERVER_B)
+
 clean:
 	rm -Rf $(BUILD)
 fclean: clean
-	rm -Rf server
-	rm -Rf client
+	rm -Rf $(SERVER)
+	rm -Rf $(SERVER_B)
+	rm -Rf $(CLIENT)
+	rm -Rf $(CLIENT_B)
 
 re: fclean all
 

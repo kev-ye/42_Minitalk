@@ -6,7 +6,7 @@
 /*   By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 13:45:53 by kaye              #+#    #+#             */
-/*   Updated: 2021/06/27 22:01:46 by kaye             ###   ########.fr       */
+/*   Updated: 2021/06/27 23:19:41 by kaye             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 static void	print_len(int *len, int *c, int *i, int *max)
 {
-	if (*len == 32)
+	if (*len == 0)
 	{
 		ft_putstr(B_GREEN"--- String length: [");
-		ft_putnbr(c);
+		ft_putnbr(*c);
 		ft_putstr("] ---\n"NONE);
 		ft_putstr(B_YELLOW"-> Content : ["NONE);
 		*max = *c;
-		*len = -1;
+		*len = 32;
 		*i = 8;
 		*c = 0;
 	}
@@ -31,8 +31,8 @@ static void	print_end(int *len, int *c, int *i, int *max)
 {
 	if (*max == 0)
 	{
-		*len = 0;
-		*i = 7;
+		*len = 32; // bug here
+		*i = 8;
 		*c = 0;
 		*max = -1;
 		ft_putstr(B_YELLOW"] <-\n"NONE);
@@ -44,13 +44,13 @@ static void	print_str(int opt)
 {
 	static int	c = 0;
 	static int	i = 7;
-	static int	len = 0;
+	static int	len = 31;
 	static int	max = -1;
 
-	if (opt == SIGUSR1)
+	if (opt == SIGUSR1 && len != 32)
+		c = c | (1 << len);
+	else if (opt == SIGUSR1 && len == 32)	
 		c = c | (1 << i);
-	if (len != -1)
-		++len;
 	print_len(&len, &c, &i, &max);
 	if (i == 0)
 	{
@@ -59,7 +59,11 @@ static void	print_str(int opt)
 		c = 0;
 		--max;
 	}
-	--i;
+	print_end(&len, &c, &i, &max);
+	if (len != 32) // bug here
+		--len;
+	if (len == 32)
+		--i;
 }
 
 static void	ft_handle(int code)
@@ -78,9 +82,11 @@ int	main(void)
 	ft_putstr("PID : ["B_CYAN);
 	ft_putnbr(pid);
 	ft_putstr(NONE"]\n");
-	signal(SIGUSR1, ft_handle);
-	signal(SIGUSR2, ft_handle);
 	while(1)
+	{
+		signal(SIGUSR1, ft_handle);
+		signal(SIGUSR2, ft_handle);
 		pause();
+	}
 	return (SUCCESS);
 }

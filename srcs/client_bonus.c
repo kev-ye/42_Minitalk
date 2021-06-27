@@ -6,7 +6,7 @@
 /*   By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 13:45:38 by kaye              #+#    #+#             */
-/*   Updated: 2021/06/27 22:08:49 by kaye             ###   ########.fr       */
+/*   Updated: 2021/06/27 23:05:00 by kaye             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,15 @@ static void	send_char(unsigned int c, pid_t pid)
 	while(bit >= 0)
 	{
 		if (((c >> bit) % 2) == 1)
-		{
-			if (kill(pid, SIGUSR1) == -1)
-				exit_with_msg(B_RED"Kill failed !\n"NONE);
-		}
+			kill(pid, SIGUSR1);
 		else
-		{
-			if (kill(pid, SIGUSR2) == -1)
-				exit_with_msg(B_RED"Kill failed !\n"NONE);
-		}
+			kill(pid, SIGUSR2);
 		usleep(100);
 		--bit;
 	}
 }
+
+#include <libc.h>
 
 static void	send_len(pid_t pid, char *str)
 {
@@ -52,18 +48,13 @@ static void	send_len(pid_t pid, char *str)
 	i = 0;
 	bit = 31;
 	len = ft_strlen(str);
+	printf("len [%zu]\n", len);
 	while(bit >= 0)
 	{
 		if (((len >> bit) % 2) == 1)
-		{
-			if (kill(pid, SIGUSR1) == -1)
-				exit_with_msg(B_RED"Kill failed !\n"NONE);
-		}
+			kill(pid, SIGUSR1);
 		else
-		{
-			if (kill(pid, SIGUSR2) == -1)
-				exit_with_msg(B_RED"Kill failed !\n"NONE);
-		}
+			kill(pid, SIGUSR2);
 		usleep(100);
 		--bit;
 	}
