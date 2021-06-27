@@ -6,7 +6,7 @@
 #    By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 13:39:40 by kaye              #+#    #+#              #
-#    Updated: 2021/06/27 15:32:32 by kaye             ###   ########.fr        #
+#    Updated: 2021/06/27 22:14:58 by kaye             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,6 @@
 
 CC		= clang
 CFLAGS 	= -Wall -Wextra -Werror
-LFLAGS	= -L./libft -lft
 IFLAGS 	= -I./libft/inc -I./incs
 
 # DIRECTORIES
@@ -29,11 +28,19 @@ DIRS			:= $(OBJ_DIR) $(addprefix $(OBJ_DIR)/, $(SUB_DIR))
 # FILES
 
 SERVER			:= server
+SERVER_B		:= server_bonus
 CLIENT			:= client
+CLIENT_B		:= client_bonus
+SRC_COMMON		:= common.c
 SRC_SERVER		:= server.c
 SRC_CLIENT		:= client.c
+SRC_SERVER_B	:= server_bonus.c
+SRC_CLIENT_B	:= client_bonus.c
+OBJ_COMMON		:= $(SRC_COMMON:%.c=$(OBJ_DIR)/%.o)
 OBJ_SERVER		:= $(SRC_SERVER:%.c=$(OBJ_DIR)/%.o)
+OBJ_SERVER_B	:= $(SRC_SERVER_B:%.c=$(OBJ_DIR)/%.o)
 OBJ_CLIENT		:= $(SRC_CLIENT:%.c=$(OBJ_DIR)/%.o)
+OBJ_CLIENT_B	:= $(SRC_CLIENT_B:%.c=$(OBJ_DIR)/%.o)
 
 # COLORS
 
@@ -48,22 +55,27 @@ CYAN_COLOR 		= \033[1;36m
 
 # MAKEFILE
 
-$(SERVER): $(OBJ_SERVER) $(OBJ_CLIENT)
-	@$(MAKE) -C $(LFT_DIR)
+$(SERVER): $(OBJ_SERVER) $(OBJ_CLIENT) $(OBJ_COMMON)
 	@echo "Creating $(RED_COLOR) $(SERVER) $(DEFAULT_COLOR)..."
-	@$(CC) $(CFLAG) $(OBJ_SERVER) $(IFLAGS) $(LFLAGS) -o $(SERVER)
+	@$(CC) $(CFLAG) $(OBJ_SERVER) $(IFLAGS) $(OBJ_COMMON) -o $(SERVER)
 	@echo "$(GREEN_COLOR)Compilation $(YELLOW_COLOR)of $(RED_COLOR)$(SERVER) $(BLUE_COLOR)done$(DEFAULT_COLOR)"
 	@echo "Creating $(RED_COLOR) $(CLIENT) $(DEFAULT_COLOR)..."
-	@$(CC) $(CFLAG) $(OBJ_CLIENT) $(IFLAGS) $(LFLAGS) -o $(CLIENT)
+	@$(CC) $(CFLAG) $(OBJ_CLIENT) $(IFLAGS) $(OBJ_COMMON) -o $(CLIENT)
 	@echo "$(GREEN_COLOR)Compilation $(YELLOW_COLOR)of $(RED_COLOR)$(CLIENT) $(BLUE_COLOR)done$(DEFAULT_COLOR)"
 
 all: $(SERVER)
 
+bonus: $(OBJ_SERVER_B) $(OBJ_CLIENT_B) $(OBJ_COMMON)
+	@echo "Creating $(RED_COLOR) $(SERVER_B) $(DEFAULT_COLOR)..."
+	@$(CC) $(CFLAG) $(OBJ_SERVER_B) $(IFLAGS) $(OBJ_COMMON) -o $(SERVER_B)
+	@echo "$(GREEN_COLOR)Compilation $(YELLOW_COLOR)of $(RED_COLOR)$(SERVER_B) $(BLUE_COLOR)done$(DEFAULT_COLOR)"
+	@echo "Creating $(RED_COLOR) $(CLIENT_B) $(DEFAULT_COLOR)..."
+	@$(CC) $(CFLAG) $(OBJ_CLIENT_B) $(IFLAGS) $(OBJ_COMMON) -o $(CLIENT_B)
+	@echo "$(GREEN_COLOR)Compilation $(YELLOW_COLOR)of $(RED_COLOR)$(CLIENT_B) $(BLUE_COLOR)done$(DEFAULT_COLOR)"
+
 clean:
-	@$(MAKE) -C $(LFT_DIR) clean >/dev/null
 	rm -Rf $(BUILD)
 fclean: clean
-	@$(MAKE) -C $(LFT_DIR) fclean >/dev/null
 	rm -Rf server
 	rm -Rf client
 
