@@ -6,35 +6,54 @@
 /*   By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 13:45:53 by kaye              #+#    #+#             */
-/*   Updated: 2021/06/27 23:19:41 by kaye             ###   ########.fr       */
+/*   Updated: 2021/06/28 13:20:17 by kaye             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static void	print_len(int *len, int *c, int *i, int *max)
+typedef struct s_mtlk
 {
-	if (*len == 0)
+	int		c;
+	int		i;
+	int		len;
+	int		max;
+	int		progress;
+	char	*str;
+}	t_mtlk;
+
+static void	print_len(t_mtlk *mtlk)
+{
+	if (mtlk->len == 0)
 	{
 		ft_putstr(B_GREEN"--- String length: [");
-		ft_putnbr(*c);
+		ft_putnbr(mtlk->c);
 		ft_putstr("] ---\n"NONE);
-		ft_putstr(B_YELLOW"-> Content : ["NONE);
-		*max = *c;
-		*len = 32;
-		*i = 8;
-		*c = 0;
+		mtlk->max = mtlk->c;
+		mtlk->len = 32;
+		mtlk->i = 8;
+		mtlk->c = 0;
 	}
 }
 
-static void	print_end(int *len, int *c, int *i, int *max)
+static void	print_end(t_mtlk *mtlk)
 {
-	if (*max == 0)
+	if (mtlk->progress == mtlk->max)
 	{
-		*len = 32; // bug here
-		*i = 8;
-		*c = 0;
-		*max = -1;
+		load_bar(mtlk->progress, mtlk->max);
+		ft_putchar('\n');
+		mtlk->len = 31;
+		mtlk->i = 7;
+		mtlk->c = 0;
+		mtlk->max = -1;
+		mtlk->progress = 0;
+		ft_putstr(B_YELLOW"-> Content : ["NONE);
+		if (mtlk->str)
+		{
+			ft_putstr(mtlk->str);
+			free(mtlk->str);
+			mtlk->str = NULL;
+		}
 		ft_putstr(B_YELLOW"] <-\n"NONE);
 		ft_putstr(B_GREEN"--- END OF STRING ! ---\n"NONE);
 	}
@@ -42,28 +61,27 @@ static void	print_end(int *len, int *c, int *i, int *max)
 
 static void	print_str(int opt)
 {
-	static int	c = 0;
-	static int	i = 7;
-	static int	len = 31;
-	static int	max = -1;
+	static t_mtlk	mtlk = {.c = 0, .i = 7,
+		.len = 31, .max = -1, .progress = 0, .str = NULL};
 
-	if (opt == SIGUSR1 && len != 32)
-		c = c | (1 << len);
-	else if (opt == SIGUSR1 && len == 32)	
-		c = c | (1 << i);
-	print_len(&len, &c, &i, &max);
-	if (i == 0)
+	if (opt == SIGUSR1 && mtlk.len != 32)
+		mtlk.c = mtlk.c | (1 << mtlk.len);
+	else if (opt == SIGUSR1 && mtlk.len == 32)
+		mtlk.c = mtlk.c | (1 << mtlk.i);
+	print_len(&mtlk);
+	if (mtlk.i == 0)
 	{
-		ft_putchar(c);
-		i = 8;
-		c = 0;
-		--max;
+		mtlk.str = add_c2str(mtlk.str, mtlk.c);
+		load_bar(mtlk.progress, mtlk.max);
+		mtlk.i = 8;
+		mtlk.c = 0;
+		++mtlk.progress;
 	}
-	print_end(&len, &c, &i, &max);
-	if (len != 32) // bug here
-		--len;
-	if (len == 32)
-		--i;
+	if (mtlk.len != 32)
+		--mtlk.len;
+	if (mtlk.len == 32)
+		--mtlk.i;
+	print_end(&mtlk);
 }
 
 static void	ft_handle(int code)
@@ -82,7 +100,7 @@ int	main(void)
 	ft_putstr("PID : ["B_CYAN);
 	ft_putnbr(pid);
 	ft_putstr(NONE"]\n");
-	while(1)
+	while (1)
 	{
 		signal(SIGUSR1, ft_handle);
 		signal(SIGUSR2, ft_handle);

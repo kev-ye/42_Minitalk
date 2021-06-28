@@ -6,18 +6,11 @@
 /*   By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 13:45:38 by kaye              #+#    #+#             */
-/*   Updated: 2021/06/27 23:05:00 by kaye             ###   ########.fr       */
+/*   Updated: 2021/06/28 13:21:53 by kaye             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
-
-static void	exit_with_msg(char *msg)
-{
-	if (msg)
-		ft_putstr(msg);
-	exit(EXIT_FAILURE);
-}
 
 static void	send_char(unsigned int c, pid_t pid)
 {
@@ -26,7 +19,7 @@ static void	send_char(unsigned int c, pid_t pid)
 
 	i = 0;
 	bit = 7;
-	while(bit >= 0)
+	while (bit >= 0)
 	{
 		if (((c >> bit) % 2) == 1)
 			kill(pid, SIGUSR1);
@@ -37,8 +30,6 @@ static void	send_char(unsigned int c, pid_t pid)
 	}
 }
 
-#include <libc.h>
-
 static void	send_len(pid_t pid, char *str)
 {
 	size_t	len;
@@ -48,8 +39,7 @@ static void	send_len(pid_t pid, char *str)
 	i = 0;
 	bit = 31;
 	len = ft_strlen(str);
-	printf("len [%zu]\n", len);
-	while(bit >= 0)
+	while (bit >= 0)
 	{
 		if (((len >> bit) % 2) == 1)
 			kill(pid, SIGUSR1);
@@ -78,7 +68,10 @@ static void	check_pid(char *pid)
 	while (pid && pid[i])
 	{
 		if (pid[i] < 48 || pid[i] > 57)
-			exit_with_msg(B_RED"Not a valid pid!\n"NONE);
+		{
+			ft_putstr(B_RED"Not a valid pid!\n"NONE);
+			exit(EXIT_FAILURE);
+		}
 		++i;
 	}
 }
@@ -86,7 +79,10 @@ static void	check_pid(char *pid)
 int	main(int ac, char **av)
 {
 	if (ac != 3)
-		exit_with_msg(B_RED"Number of args is not valid!\n"NONE);
+	{
+		ft_putstr(B_RED"Number of args is not valid!\n"NONE);
+		exit(EXIT_FAILURE);
+	}
 	check_pid(av[1]);
 	send_len(ft_atoi(av[1]), av[2]);
 	send_str(ft_atoi(av[1]), av[2]);

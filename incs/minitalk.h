@@ -6,7 +6,7 @@
 /*   By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 15:29:50 by kaye              #+#    #+#             */
-/*   Updated: 2021/06/27 22:09:28 by kaye             ###   ########.fr       */
+/*   Updated: 2021/06/28 13:15:06 by kaye             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # define B_PURPLE "\033[1;35m"
 # define B_CYAN "\033[1;36m"
 # define NONE "\033[0m"
+# define S_CLRLINE "\033[K\r"
 # define ERROR 1
 # define SUCCESS 0
 # define BUFFER_SIZE_PN 11
@@ -32,5 +33,6 @@ void	ft_putchar(char c);
 void	ft_putstr(char *s);
 int		ft_atoi(const char *str);
 void	ft_putnbr(int n);
-
-# endif
+char	*add_c2str(char const *s1, char c);
+void	load_bar(long long current, long long max);
+#endif

@@ -6,14 +6,14 @@
 #    By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 13:39:40 by kaye              #+#    #+#              #
-#    Updated: 2021/06/27 22:17:50 by kaye             ###   ########.fr        #
+#    Updated: 2021/06/28 12:44:51 by kaye             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # COMPILATION
 
 CC		= clang
-CFLAGS 	= -Wall -Wextra -Werror
+CFLAGS 	= -Wall -Wextra -Werror -g3 -fsanitize=address
 IFLAGS 	= -I./libft/inc -I./incs
 
 # DIRECTORIES
@@ -31,7 +31,8 @@ SERVER			:= server
 SERVER_B		:= server_bonus
 CLIENT			:= client
 CLIENT_B		:= client_bonus
-SRC_COMMON		:= common.c
+SRC_COMMON		:= common.c \
+				   utils.c
 SRC_SERVER		:= server.c
 SRC_CLIENT		:= client.c
 SRC_SERVER_B	:= server_bonus.c

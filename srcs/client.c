@@ -6,7 +6,7 @@
 /*   By: kaye <kaye@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 21:15:42 by kaye              #+#    #+#             */
-/*   Updated: 2021/06/27 22:58:31 by kaye             ###   ########.fr       */
+/*   Updated: 2021/06/28 13:15:27 by kaye             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	send_char(unsigned int c, pid_t pid)
 
 	i = 0;
 	bit = 7;
-	while(bit >= 0)
+	while (bit >= 0)
 	{
 		if (((c >> bit) % 2) == 1)
 			kill(pid, SIGUSR1);
